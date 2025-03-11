@@ -1,3 +1,13 @@
+<%@ page import="java.net.http.HttpClient" %>
+<%@ page import="java.net.http.HttpRequest" %>
+<%@ page import="java.net.URI" %>
+<%@ page import="java.net.http.HttpResponse" %>
+<%@ page import="io.github.cdimascio.dotenv.Dotenv" %>
+<%@ page import="com.fasterxml.jackson.databind.ObjectMapper" %>
+<%@ page import="com.fasterxml.jackson.core.type.TypeReference" %>
+<%@ page import="java.util.Map" %>
+<%@ page import="java.util.List" %>
+<%@ page import="java.util.HashMap" %>
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <!DOCTYPE html>
 <html>
@@ -39,9 +49,37 @@
     </style>
 </head>
 <body>
+    <%! HttpClient client = HttpClient.newHttpClient(); %>
+    <%! Dotenv dotenv = Dotenv.configure().ignoreIfMissing().load(); %>
+    <%! ObjectMapper mapper = new ObjectMapper(); %>
+    <%! String answer = ""; %>
+    <%
+        Map<String, List<Map<String, List<Map<String, String>>>>> geminiMap = new HashMap<>();
+        List<Map<String, String>> parts = List.of(new HashMap<>());
+        parts.get(0).put("text", request.getParameter("prompt"));
+        List<Map<String, List<Map<String, String>>>> contents = List.of(new HashMap<>());
+        contents.get(0).put("parts", parts);
+        geminiMap.put("contents", contents);
+        HttpRequest httpRequest = HttpRequest.newBuilder()
+                .uri(URI.create("https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=%s".formatted(
+                        dotenv.get("GEMINI_KEY")
+                )))
+                .POST(HttpRequest.BodyPublishers.ofString(
+                        mapper.writeValueAsString(geminiMap)))
+                .build();
+        try {
+            HttpResponse<String> httpResponse = client.send(httpRequest, HttpResponse.BodyHandlers.ofString());
+            answer = httpResponse.body();
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
+    %>
     <form>
         <section class="title">
             프롬프트 : <%= request.getParameter("prompt") %>
+        </section>
+        <section>
+            답변 : <%= answer %>
         </section>
         <input name="prompt" placeholder="프롬프트를 입력해주세요">
         <button>제출</button>
