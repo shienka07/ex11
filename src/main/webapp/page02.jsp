@@ -28,12 +28,12 @@
             font-style: normal;
         }
         * {
-            font-family: Cafe24Ohsquare, serif;
+            font-family: Ownglyph_corncorn-Rg, serif;
             padding: 0;
             margin: 0;
         }
         .title {
-            font-family: Ownglyph_corncorn-Rg, serif;
+            font-family: Cafe24Ohsquare, serif;
         }
         form {
             width: 100%;
