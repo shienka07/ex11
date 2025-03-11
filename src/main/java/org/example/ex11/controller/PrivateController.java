@@ -20,6 +20,8 @@ import java.util.Map;
 
 @WebServlet("/private")
 public class PrivateController extends HttpServlet {
+
+
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         HttpClient client = HttpClient.newHttpClient();

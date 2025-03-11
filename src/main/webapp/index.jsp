@@ -7,5 +7,8 @@
   <a href="page01.jsp">page01</a>
   <a href="page02.jsp">page02</a>
   <a href="private">private</a>
+  <a href="auth">auth</a>
+  <a href="image/147">미뇽</a>
+  <a href="image/001">이상해씨</a>
 </body>
 </html>
